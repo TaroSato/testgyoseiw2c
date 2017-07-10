@@ -143,6 +143,7 @@ $jsonString = callWatson();
 $json = json_decode($jsonString, true);
 
 $resmess= $json["answer"]["text"];
+error_log("SID:".$json["session_id"]);
 error_log("W2Cから回答:".$resmess);
 
 //日本語以外の場合は翻訳
