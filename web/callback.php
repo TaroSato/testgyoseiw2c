@@ -210,7 +210,7 @@ function callWatson(){
 
 	$options = array(
 			CURLOPT_HTTPHEADER => array(
-					'Content-Type: application/json',
+					'Content-Type: application/json; charset=UTF-8',
 			),
 			CURLOPT_USERPWD => $username . ':' . $password,
 			CURLOPT_POST => true,
