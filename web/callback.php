@@ -79,7 +79,7 @@ if($type != "text"){
 //$url = "https://gateway.watson-j.jp/natural-language-classifier/api/v1/classifiers/".$classfier."/classify?text=".$text;
 //$url = "https://gateway.watson-j.jp/natural-language-classifier/api/v1/classifiers/".$classfier."/classify";
 //$url = "https://gateway.watsonplatform.net/conversation/api/v1/workspaces/".$workspace_id."/message?version=2017-04-21";
-$url = "http://tomcat-w2c-sample-back-gyosei.mybluemix.net/w2c_classifier/api/webchat";
+$url = "http://tomcat-w2c-sample-front-gyosei.mybluemix.net/w2c_classifier/api/webchat";
 
 //$data = array("text" => $text);
 //$data = array('input' => array("text" => $text));
