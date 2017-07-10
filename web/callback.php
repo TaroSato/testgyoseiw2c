@@ -138,6 +138,7 @@ curl_setopt_array($curl, $options);
 $jsonString = curl_exec($curl);
 */
 $jsonString = callWatson();
+
 //error_log($jsonString);
 $json = json_decode($jsonString, true);
 
@@ -217,7 +218,9 @@ function callWatson(){
 	);
 
 	curl_setopt_array($curl, $options);
-	return curl_exec($curl);
+	$json = curl_exec($curl);
+	error_log("CURLのエラー".curl_error($curl));
+	return $json;
 }
 
 function callWatsonLT1(){
