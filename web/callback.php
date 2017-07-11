@@ -184,12 +184,15 @@ if($last_reply == 1){
 										"type" => "postback",
 										//"label" => $json["answer"]["choices"][0]["label"],
 										"label" => "枚方市",
-										"data" => $json["answer"]["choices"][0]["id"]
+										//"data" => $json["answer"]["choices"][0]["id"]
+										"data" => "85"
 								],
 								[
 										"type" => "postback",
-										"label" => $json["answer"]["choices"][1]["label"],
-										"data" => $json["answer"]["choices"][1]["id"]
+										//"label" => $json["answer"]["choices"][1]["label"],
+										//"data" => $json["answer"]["choices"][1]["id"]
+										"label" => "大和市",
+										"data" => "29"
 								]
 						]
 				]
@@ -226,7 +229,7 @@ if($last_reply == 1){
 				]
 		];
 	}
-	if(count($json["answer"]["choices"]) == 4){
+	if(count($json["answer"]["choices"]) > 3){
 		$response_format_text = [
 				"type" => "template",
 				"altText" => "this is a buttons template",
