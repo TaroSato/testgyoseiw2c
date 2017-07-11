@@ -149,6 +149,8 @@ error_log("CODE:".$json["result"]["code"]);
 error_log("MES:".$json["result"]["message"]);
 error_log("W2Cから回答:".$resmess);
 error_log("last_reply_flg:".$json["answer"]["last_reply_flg"]);
+error_log("choice_id:".$json["answer"]["choices"][0]["id"]);
+error_log("choice_id:".$json["answer"]["choices"][0]["label"]);
 
 //日本語以外の場合は翻訳
 if($language != "ja"){
