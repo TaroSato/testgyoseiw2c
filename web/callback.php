@@ -124,7 +124,7 @@ $sid = $json["session_id"];
 
 $resmess = $json["answer"]["text"];
 $last_reply = $json["answer"]["last_reply_flg"];
-if($sid == ""){
+if($resmess== ""){
 	$resmess = "市町村を選択してください";
 }
 
