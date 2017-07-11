@@ -130,6 +130,7 @@ if($sid == ""){
 
 error_log("CODE:".$json["result"]["code"]);
 error_log("MES:".$json["result"]["message"]);
+error_log("last_reply:".$last_reply);
 
 /*
 //日本語以外の場合は翻訳
@@ -148,37 +149,110 @@ $response_format_text = [
 
 if($last_reply == 1){
 	$resmess = "以下のURLをご覧ください\n".$resmess;
-}else{
 	$response_format_text = [
-			"type" => "template",
-			"altText" => "this is a buttons template",
-			"template" => [
-					"type" => "buttons",
-					"text" => $resmess,
-					"actions" => [
-							[
-									"type" => "postback",
-									"label" => $json["answer"]["choices"][0]["label"],
-									"data" => $json["answer"]["choices"][0]["id"]
-							],
-							[
-									"type" => "postback",
-									"label" => $json["answer"]["choices"][1]["label"],
-									"data" => $json["answer"]["choices"][1]["id"]
-							],
-							[
-									"type" => "postback",
-									"label" => $json["answer"]["choices"][2]["label"],
-									"data" => $json["answer"]["choices"][2]["id"]
-							],
-							[
-									"type" => "postback",
-									"label" => $json["answer"]["choices"][3]["label"],
-									"data" => $json["answer"]["choices"][3]["id"]
-							]
-					]
-			]
+			"type" => "text",
+			"text" => $resmess
 	];
+}else{
+	if(count($json["answer"]["choices"]) == 1){
+		$response_format_text = [
+				"type" => "template",
+				"altText" => "this is a buttons template",
+				"template" => [
+						"type" => "buttons",
+						"text" => $resmess,
+						"actions" => [
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][0]["label"],
+										"data" => $json["answer"]["choices"][0]["id"]
+								]
+						]
+				]
+		];
+	}
+	if(count($json["answer"]["choices"]) == 2){
+		$response_format_text = [
+				"type" => "template",
+				"altText" => "this is a buttons template",
+				"template" => [
+						"type" => "buttons",
+						"text" => $resmess,
+						"actions" => [
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][0]["label"],
+										"data" => $json["answer"]["choices"][0]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][1]["label"],
+										"data" => $json["answer"]["choices"][1]["id"]
+								]
+						]
+				]
+		];
+	}
+	if(count($json["answer"]["choices"]) == 3){
+		$response_format_text = [
+				"type" => "template",
+				"altText" => "this is a buttons template",
+				"template" => [
+						"type" => "buttons",
+						"text" => $resmess,
+						"actions" => [
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][0]["label"],
+										"data" => $json["answer"]["choices"][0]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][1]["label"],
+										"data" => $json["answer"]["choices"][1]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][2]["label"],
+										"data" => $json["answer"]["choices"][2]["id"]
+								]
+						]
+				]
+		];
+	}
+	if(count($json["answer"]["choices"]) == 4){
+		$response_format_text = [
+				"type" => "template",
+				"altText" => "this is a buttons template",
+				"template" => [
+						"type" => "buttons",
+						"text" => $resmess,
+						"actions" => [
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][0]["label"],
+										"data" => $json["answer"]["choices"][0]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][1]["label"],
+										"data" => $json["answer"]["choices"][1]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][2]["label"],
+										"data" => $json["answer"]["choices"][2]["id"]
+								],
+								[
+										"type" => "postback",
+										"label" => $json["answer"]["choices"][3]["label"],
+										"data" => $json["answer"]["choices"][3]["id"]
+								]
+						]
+				]
+		];
+	}
+
 }
 
 lineSend:
