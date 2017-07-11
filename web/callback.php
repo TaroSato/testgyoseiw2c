@@ -84,7 +84,7 @@ $url = "https://tomcat-w2c-sample-front-gyosei.mybluemix.net/w2c_classifier/api/
 
 //$data = array("text" => $text);
 //$data = array('input' => array("text" => $text));
-$data = array("api_version" => "", "session_id" => "", "choice_id" => "", "message" => $text);
+$data = array("api_version" => "", "session_id" => "", "choice_id" => "85", "message" => $text);
 
 /*
 $tdate = date("YmdHis");
