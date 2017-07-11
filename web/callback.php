@@ -84,7 +84,7 @@ $url = "https://tomcat-w2c-sample-front-gyosei.mybluemix.net/w2c_classifier/api/
 
 //$data = array("text" => $text);
 //$data = array('input' => array("text" => $text));
-$data = array("api_version" => "", "session_id" => "", "choice_id" => "85", "message" => $text);
+$data = array("api_version" => "", "session_id" => "", "choice_id" => "", "message" => $text);
 
 /*
 $tdate = date("YmdHis");
@@ -140,6 +140,11 @@ $jsonString = curl_exec($curl);
 $jsonString = callWatson();
 
 //error_log($jsonString);
+$json = json_decode($jsonString, true);
+$sid = $json["session_id"];
+
+$data = array("api_version" => "", "session_id" => $sid, "choice_id" => "85", "message" => $text);
+$jsonString = callWatson();
 $json = json_decode($jsonString, true);
 
 $resmess= $json["answer"]["text"];
