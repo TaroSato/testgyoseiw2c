@@ -154,6 +154,7 @@ if($last_reply == 1){
 			"text" => $resmess
 	];
 }else{
+	error_log("要素数:".count($json["answer"]["choices"]));
 	if(count($json["answer"]["choices"]) == 1){
 		$response_format_text = [
 				"type" => "template",
