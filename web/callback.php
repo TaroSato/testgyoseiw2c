@@ -73,9 +73,11 @@ if(!$bl_isNumeric){
 */
 
 //メッセージ以外のときは何も返さず終了
+/*
 if($type != "text"){
 	exit;
 }
+*/
 
 $cid = "";
 if($eventType == "postback"){
@@ -182,17 +184,13 @@ if($last_reply == 1){
 						"actions" => [
 								[
 										"type" => "postback",
-										//"label" => $json["answer"]["choices"][0]["label"],
-										"label" => "枚方市",
-										//"data" => $json["answer"]["choices"][0]["id"]
-										"data" => "85"
+										"label" => $json["answer"]["choices"][0]["label"],
+										"data" => $json["answer"]["choices"][0]["id"]
 								],
 								[
 										"type" => "postback",
-										//"label" => $json["answer"]["choices"][1]["label"],
-										//"data" => $json["answer"]["choices"][1]["id"]
-										"label" => "大和市",
-										"data" => "29"
+										"label" => $json["answer"]["choices"][1]["label"],
+										"data" => $json["answer"]["choices"][1]["id"]
 								]
 						]
 				]
