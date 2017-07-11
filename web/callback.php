@@ -8,10 +8,10 @@ $accessToken = getenv('LINE_CHANNEL_ACCESS_TOKEN');
 //$workspace_id = getenv('CVS_WORKSPASE_ID');
 $username = getenv('CVS_USERNAME');
 $password = getenv('CVS_PASS');
-//$db_host =  getenv('DB_HOST');
-//$db_name =  getenv('DB_NAME');
-//$db_pass =  getenv('DB_PASS');
-//$db_user =  getenv('DB_USER');
+$db_host =  getenv('DB_HOST');
+$db_name =  getenv('DB_NAME');
+$db_pass =  getenv('DB_PASS');
+$db_user =  getenv('DB_USER');
 $LTuser = getenv('LT_USER');
 $LTpass = getenv('LT_PASS');
 
@@ -33,13 +33,14 @@ $userID = $jsonObj->{"events"}[0]->{"source"}->{"userId"};
 $resmess = "";
 
 //DB接続
-//$conn = "host=".$db_host." dbname=".$db_name." user=".$db_user." password=".$db_pass;
-//$link = pg_connect($conn);
+$conn = "host=".$db_host." dbname=".$db_name." user=".$db_user." password=".$db_pass;
+$link = pg_connect($conn);
 
 //LT問い合わせ
+/*
 $bl_isNumeric = false;
 $Ltext = $text;
-/*
+
 if (is_numeric($Ltext)) {
 	$bl_isNumeric = true;
 	if ($link) {
@@ -52,7 +53,7 @@ if (is_numeric($Ltext)) {
 		}
 	}
 }
-*/
+
 $jsonString = callWatsonLT1();
 $json = json_decode($jsonString, true);
 $language = $json["languages"][0]["language"];
@@ -69,11 +70,16 @@ if(!$bl_isNumeric){
 		}
 	}
 }
-
+*/
 
 //メッセージ以外のときは何も返さず終了
 if($type != "text"){
 	exit;
+}
+
+$cid = "";
+if($eventType == "postback"){
+	$cid= $jsonObj->{"events"}[0]->{"postback"}->{"data"};
 }
 
 //$url = "https://gateway.watson-j.jp/natural-language-classifier/api/v1/classifiers/".$classfier."/classify?text=".$text;
@@ -84,79 +90,48 @@ $url = "https://tomcat-w2c-sample-front-gyosei.mybluemix.net/w2c_classifier/api/
 
 //$data = array("text" => $text);
 //$data = array('input' => array("text" => $text));
-$data = array("api_version" => "", "session_id" => "", "choice_id" => "", "message" => $text);
 
-/*
 $tdate = date("YmdHis");
+$sid = "";
+$bl_sflg = false;
 if ($link) {
 	$result = pg_query("SELECT * FROM cvsdata WHERE userid = '{$userID}'");
 	if (pg_num_rows($result) == 0) {
 		error_log("データなし");
-		$jsonString = callWatson();
-		$json = json_decode($jsonString, true);
-		$conversation_id = $json["context"]["conversation_id"];
-		$conversation_node = "root";
-		$sql = "INSERT INTO cvsdata (userid, conversationid, dnode, time) VALUES ('{$userID}','{$conversation_id}','{$conversation_node}','{$tdate}')";
+		$bl_sflg = false;
 		$result_flag = pg_query($sql);
 	}else{
 		error_log("データあり");
+		$bl_sflg = true;
 		$row = pg_fetch_row($result);
-		$conversation_id = $row[1];
-		$conversation_node= $row[2];
+		$sid= $row[1];
 		$conversation_time= $row[3];
 		$timelag = $tdate - $conversation_time;
 		if($timelag > 1000){
-			$jsonString = callWatson();
-			$json = json_decode($jsonString, true);
-			$conversation_id = $json["context"]["conversation_id"];
-			$conversation_node = "root";
+			$sid = "";
+			$cid = "";
 		}
 	}
 }
-*/
 
-/*
-$data["context"] = array("conversation_id" => $conversation_id,
-		"system" => array("dialog_stack" => array(array("dialog_node" => $conversation_node)),
-      "dialog_turn_counter" => 1,
-      "dialog_request_counter" => 1));
-*/
+$data = array("api_version" => "", "session_id" => $sid, "choice_id" => $cid, "message" => $text);
 
-/*
-$curl = curl_init($url);
-$options = array(
-    CURLOPT_HTTPHEADER => array(
-     'Content-Type: application/json',
-    ),
-    CURLOPT_USERPWD => $username . ':' . $password,
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => json_encode($data),
-    CURLOPT_RETURNTRANSFER => true,
-);
-
-curl_setopt_array($curl, $options);
-$jsonString = curl_exec($curl);
-*/
 $jsonString = callWatson();
 
 //error_log($jsonString);
 $json = json_decode($jsonString, true);
 $sid = $json["session_id"];
 
-$data = array("api_version" => "", "session_id" => $sid, "choice_id" => "85", "message" => $text);
-$jsonString = callWatson();
-$json = json_decode($jsonString, true);
+$resmess = $json["answer"]["text"];
+$last_reply = $json["answer"]["last_reply_flg"];
+if($sid == ""){
+	$resmess = "市町村を選択してください";
+}
 
-$resmess= $json["answer"]["text"];
-error_log("JSON:".$json);
-error_log("SID:".$json["session_id"]);
 error_log("CODE:".$json["result"]["code"]);
 error_log("MES:".$json["result"]["message"]);
-error_log("W2Cから回答:".$resmess);
-error_log("last_reply_flg:".$json["answer"]["last_reply_flg"]);
-error_log("choice_id:".$json["answer"]["choices"][0]["id"]);
-error_log("choice_id:".$json["answer"]["choices"][0]["label"]);
 
+/*
 //日本語以外の場合は翻訳
 if($language != "ja"){
 	$data = array('text' => $resmess, 'source' => 'ja', 'target' => $language);
@@ -169,6 +144,42 @@ $response_format_text = [
     "type" => "text",
 	"text" => $resmess
 ];
+*/
+
+if($last_reply == 1){
+	$resmess = "以下のURLをご覧ください\n".$resmess;
+}else{
+	$response_format_text = [
+			"type" => "template",
+			"altText" => "this is a buttons template",
+			"template" => [
+					"type" => "buttons",
+					"text" => $resmess,
+					"actions" => [
+							[
+									"type" => "postback",
+									"label" => $json["answer"]["choices"][0]["label"],
+									"data" => $json["answer"]["choices"][0]["id"]
+							],
+							[
+									"type" => "postback",
+									"label" => $json["answer"]["choices"][1]["label"],
+									"data" => $json["answer"]["choices"][1]["id"]
+							],
+							[
+									"type" => "postback",
+									"label" => $json["answer"]["choices"][2]["label"],
+									"data" => $json["answer"]["choices"][2]["id"]
+							],
+							[
+									"type" => "postback",
+									"label" => $json["answer"]["choices"][3]["label"],
+									"data" => $json["answer"]["choices"][3]["id"]
+							]
+					]
+			]
+	];
+}
 
 lineSend:
 $post_data = [
@@ -189,31 +200,22 @@ $result = curl_exec($ch);
 curl_close($ch);
 
 
-/*
 if (!$link) {
 	error_log("接続失敗です。".pg_last_error());
 }else{
-	if(strlen($text) > 200){
-		$text = mb_substr($text,0,199,"utf-8");
+
+	if (!$bl_sflg) {
+		$sql = "INSERT INTO cvsdata (userid, conversationid, dnode, time) VALUES ('{$userID}','{$sid}','','{$tdate}')";
+		$result_flag = pg_query($sql);
+	}else{
+		$sql = "UPDATE cvsdata SET conversationid = '{$sid}', dnode = '', time = '{$tdate}' WHERE userid = '{$userID}'";
+		$result_flag = pg_query($sql);
 	}
-	if(strlen($resmess) > 200){
-		$resmess= mb_substr($resmess,0,199,"utf-8");
-	}
-	//シングルコーテーションを除去
-	$Utext= str_replace("'","",$Utext);
-	$resmess = str_replace("'","",$resmess);
-	$sql = "INSERT INTO botlog (time, userid, contents, return) VALUES ('{$tdate}','{$userID}','{$Utext}','{$resmess}')";
-	$result_flag = pg_query($sql);
 	if (!$result_flag) {
-		error_log("インサートに失敗しました。".pg_last_error());
-	}
-	$sql = "UPDATE cvsdata SET conversationid = '{$conversation_id}', dnode = '{$conversation_node}', time = '{$tdate}' WHERE userid = '{$userID}'";
-	$result_flag = pg_query($sql);
-	if (!$result_flag) {
-		error_log("アップデートに失敗しました。".pg_last_error());
+		error_log("更新に失敗しました。".pg_last_error());
 	}
 }
-*/
+
 
 function callWatson(){
 	global $curl, $url, $username, $password, $data, $options;
@@ -231,7 +233,7 @@ function callWatson(){
 
 	curl_setopt_array($curl, $options);
 	$json = curl_exec($curl);
-	error_log("CURLのエラー".curl_error($curl));
+	//error_log("CURLのエラー".curl_error($curl));
 	return $json;
 }
 
