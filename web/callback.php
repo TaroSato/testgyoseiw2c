@@ -82,6 +82,7 @@ if($type != "text"){
 $cid = "";
 if($eventType == "postback"){
 	$cid= $jsonObj->{"events"}[0]->{"postback"}->{"data"};
+	$text = "よろしく";
 }
 
 //$url = "https://gateway.watson-j.jp/natural-language-classifier/api/v1/classifiers/".$classfier."/classify?text=".$text;
