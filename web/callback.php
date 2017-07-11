@@ -173,7 +173,6 @@ if($last_reply == 1){
 		];
 	}
 	if(count($json["answer"]["choices"]) == 2){
-		/*
 		$response_format_text = [
 				"type" => "template",
 				"altText" => "this is a buttons template",
@@ -183,7 +182,8 @@ if($last_reply == 1){
 						"actions" => [
 								[
 										"type" => "postback",
-										"label" => $json["answer"]["choices"][0]["label"],
+										//"label" => $json["answer"]["choices"][0]["label"],
+										"label" => "枚方市",
 										"data" => $json["answer"]["choices"][0]["id"]
 								],
 								[
@@ -194,37 +194,10 @@ if($last_reply == 1){
 						]
 				]
 		];
-		*/
 		error_log("label1:".$json["answer"]["choices"][0]["label"]);
 		error_log("id1:".$json["answer"]["choices"][0]["id"]);
 		error_log("label2:".$json["answer"]["choices"][1]["label"]);
 		error_log("id2:".$json["answer"]["choices"][1]["id"]);
-		$resmess = "住民票の写しは行政市役所本庁舎、行政第一支所、行政第二支所の窓口で発行できます。\n受付時間は、月曜日～金曜日の午前8時30分～午後5時です。\nちなみに個人番号カードはお持ちですか？";
-		$response_format_text = [
-				"type" => "template",
-				"altText" => "this is a buttons template",
-				"template" => [
-						"type" => "buttons",
-						"text" => $resmess,
-						"actions" => [
-								[
-										"type" => "postback",
-										"label" => "１．はい",
-										"data" => "action=uc_2_1"
-								],
-								[
-										"type" => "postback",
-										"label" => "２．いいえ",
-										"data" => "action=uc_2_2"
-								],
-								[
-										"type" => "postback",
-										"label" => "３．わからない",
-										"data" => "action=uc_2_3"
-								]
-						]
-				]
-		];
 	}
 	if(count($json["answer"]["choices"]) == 3){
 		$response_format_text = [
